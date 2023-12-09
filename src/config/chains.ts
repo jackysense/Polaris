@@ -7,6 +7,7 @@ import {
   celo,
   classic,
   confluxESpace,
+  eos,
   fantom,
   gnosis,
   linea,
@@ -14,8 +15,7 @@ import {
   okc,
   opBNB,
   polygon,
-  zkSync,
-} from "viem/chains";
+  zkSync} from "viem/chains";
 
 export const shibarium = defineChain({
   id: 109,
@@ -48,6 +48,7 @@ export const inscriptionChains = {
   base,
   arbitrum,
   zkSync,
+  eos,
   linea,
   okc,
   fantom,
