@@ -31,7 +31,7 @@ import { handleAddress, handleLog } from "@/utils/helper";
 const example =
   'data:,{"p":"asc-20","op":"mint","tick":"aval","amt":"100000000"}';
 
-type RadioType = "meToMe" | "manyToOne";
+type RadioType = "meToMe" | "manyToOne"| "contract";
 
 type GasRadio = "all" | "tip";
 
@@ -40,6 +40,7 @@ export default function Home() {
   const [privateKeys, setPrivateKeys] = useState<Hex[]>([]);
   const [radio, setRadio] = useState<RadioType>("meToMe");
   const [toAddress, setToAddress] = useState<Hex>();
+  const [contractAddress, setContractAddress] = useState<Hex>();
   const [rpc, setRpc] = useState<string>();
   const [inscription, setInscription] = useState<string>("");
   const [gas, setGas] = useState<number>(0);
@@ -63,7 +64,7 @@ export default function Home() {
     async () => {
       const results = await Promise.allSettled(
         accounts.map((account) => {
-          return client.sendTransaction({
+         let param={
             account,
             to: radio === "meToMe" ? account.address : toAddress,
             value: 0n,
@@ -77,7 +78,25 @@ export default function Home() {
                     maxPriorityFeePerGas: parseEther(gas.toString(), "gwei"),
                   }
               : {}),
-          });
+          }
+          if(radio==='contract'){
+             param={
+              account,
+              to:  contractAddress,
+              data:stringToHex(''),
+              value: 0n,          
+              ...(gas > 0
+                ? gasRadio === "all"
+                  ? {
+                      gasPrice: parseEther(gas.toString(), "gwei"),
+                    }
+                  : {
+                      maxPriorityFeePerGas: parseEther(gas.toString(), "gwei"),
+                    }
+                : {}),
+            }
+          }
+          return client.sendTransaction(param);
         }),
       );
       results.forEach((result, index) => {
@@ -115,7 +134,7 @@ export default function Home() {
       return;
     }
 
-    if (!inscription) {
+    if (radio!=='contract' && !inscription) {
       setLogs((logs) => [handleLog("没有铭文", "error"), ...logs]);
       setRunning(false);
       return;
@@ -196,6 +215,12 @@ export default function Home() {
           label="多转一"
           disabled={running}
         />
+          <FormControlLabel
+          value="contract"
+          control={<Radio />}
+          label="合约"
+          disabled={running}
+        />
       </RadioGroup>
 
       {radio === "manyToOne" && (
@@ -212,9 +237,22 @@ export default function Home() {
           />
         </div>
       )}
-
+     {radio === "contract" && (
+        <div className=" flex flex-col gap-2">
+          <span>合约地址（必填）:</span>
+          <TextField
+            size="small"
+            placeholder="地址"
+            disabled={running}
+            onChange={(e) => {
+              const text = e.target.value;
+              isAddress(text) && setContractAddress(text);
+            }}
+          />
+        </div>
+      )}
       <div className=" flex flex-col gap-2">
-        <span>铭文（必填，原始铭文，不是转码后的十六进制）:</span>
+        <span>铭文（必填，原始铭文，不是转码后的十六进制,to 为合约可以不填）:</span>
         <TextField
           size="small"
           placeholder={`铭文，不要输入错了，多检查下，例子：\n${example}`}
