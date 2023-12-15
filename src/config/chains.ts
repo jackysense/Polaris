@@ -7,6 +7,7 @@ import {
   celo,
   classic,
   confluxESpace,
+  cronos,
   eos,
   fantom,
   gnosis,
@@ -61,6 +62,9 @@ export const cfx = defineChain({
   },
 });
 
+
+
+
 export const inscriptionChains = {
   eth: mainnet,
   bsc,
@@ -78,7 +82,9 @@ export const inscriptionChains = {
   celo,
   confluxESpace,
   gnosis,
-  shibarium,cfx
+  shibarium,
+  cfx,
+  cronos
 };
 
 export type ChainKey = keyof typeof inscriptionChains;
