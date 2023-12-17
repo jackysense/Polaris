@@ -12,6 +12,8 @@ import {
   fantom,
   filecoin,
   gnosis,
+ goerli,
+ holesky,
  iotex, 
  kava,
   klaytn,
@@ -23,6 +25,7 @@ import {
   opBNB,
   optimism,
   polygon,
+  scroll,
   sepolia,
   zkSync} from "viem/chains";
 
@@ -112,8 +115,7 @@ export const inscriptionChains = {
   arbitrum,
   zkSync,
   eos,
-  linea,
-  
+  linea,  
   celo,
   confluxESpace,
   gnosis,
@@ -122,7 +124,11 @@ export const inscriptionChains = {
   sepolia,
   moonbeam,
   iotex,
-  kava,ethw
+  kava,
+  ethw,
+  scroll,
+  goerli,
+  holesky
 };
 
 export type ChainKey = keyof typeof inscriptionChains;
