@@ -98,6 +98,29 @@ export const cfx = defineChain({
 });
 
 
+export const WEMIX3 = defineChain({
+  id: 1111,
+  name: "WEMIX3.0 Mainnet",
+  network: "WEMIX3.0 Mainnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "WEMIX",
+    symbol: "WEMIX",
+  },
+  rpcUrls: {
+    default: {
+      http: ["wss://ws.wemix.com"],
+    },
+    public: {
+      http: ["https://api.wemix.com"],
+    },
+  },
+  blockExplorers: {
+    default: { name: "Explorer", url: "https://explorer.wemix.com" },
+  },
+});
+
+
 
 
 export const inscriptionChains = {
@@ -126,6 +149,7 @@ export const inscriptionChains = {
   iotex,
   kava,
   ethw,
+  WEMIX3,
   scroll,
   goerli,
   holesky
