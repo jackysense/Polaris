@@ -13,6 +13,7 @@ import {
   Chain,
   createWalletClient,
   Hex,
+  hexToString,
   http,
   isAddress,
   parseEther,
@@ -32,6 +33,7 @@ const example =
   'data:,{"p":"asc-20","op":"mint","tick":"aval","amt":"100000000"}';
 
 type RadioType = "meToMe" | "manyToOne"| "contract";
+type TextRadioType = "text" | "hex";
 
 type GasRadio = "all" | "tip";
 
@@ -39,6 +41,8 @@ export default function Home() {
   const [chain, setChain] = useState<Chain>(mainnet);
   const [privateKeys, setPrivateKeys] = useState<Hex[]>([]);
   const [radio, setRadio] = useState<RadioType>("meToMe");
+  const [textRadio, setTextRadio] = useState<TextRadioType>("text");
+  
   const [toAddress, setToAddress] = useState<Hex>();
   const [contractAddress, setContractAddress] = useState<Hex>();
   const [rpc, setRpc] = useState<string>();
@@ -68,7 +72,7 @@ export default function Home() {
             account,
             to: radio === "meToMe" ? account.address : toAddress,
             value: 0n,
-            data: stringToHex(inscription),
+            data:textRadio==='text'? stringToHex(inscription):(`0x${inscription}` as Hex),
             ...(gas > 0
               ? gasRadio === "all"
                 ? {
@@ -78,6 +82,9 @@ export default function Home() {
                     maxPriorityFeePerGas: parseEther(gas.toString(), "gwei"),
                   }
               : {}),
+          }
+          if(textRadio==='hex'){
+            console.log('hexToString',hexToString(`0x${inscription}`))
           }
           if(radio==='contract'){
              param={
@@ -151,7 +158,7 @@ export default function Home() {
           select
           defaultValue="eth"
           size="small"
-          disabled={running}
+          disabled={running}        
           onChange={(e) => {
             const text = e.target.value as ChainKey;
             setChain(inscriptionChains[text]);
@@ -251,18 +258,43 @@ export default function Home() {
           />
         </div>
       )}
-      <div className=" flex flex-col gap-2">
-        <span>铭文（必填，原始铭文，不是转码后的十六进制,to 为合约可以不填）:</span>
+    {radio === "contract" ?null: <div className=" flex flex-col gap-2">
+
+    <RadioGroup
+        row
+        defaultValue="text"
+        onChange={(e) => {
+          const value = e.target.value as TextRadioType;
+          setTextRadio(value);
+        }}
+      >
+        <FormControlLabel
+          value="text"
+          control={<Radio />}
+          label="文本"
+          disabled={running}
+        />
+        <FormControlLabel
+          value="hex"
+          control={<Radio />}
+          label="十六进制"
+          disabled={running}
+        />       
+      </RadioGroup>    
+    
+   
+      <span>{textRadio==='text'? '铭文（必填，原始铭文）':'铭文（必填，转码后的十六进制）'}:</span>
         <TextField
           size="small"
-          placeholder={`铭文，不要输入错了，多检查下，例子：\n${example}`}
+          placeholder={textRadio==='text'? `铭文，不要输入错了，多检查下，例子：\n${example};`:'十六进制不带0x'}
           disabled={running}
           onChange={(e) => {
             const text = e.target.value;
             setInscription(text.trim());
           }}
         />
-      </div>
+     
+      </div>} 
 
       <div className=" flex flex-col gap-2">
         <span>
