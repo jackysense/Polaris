@@ -62,6 +62,28 @@ export const cfx = defineChain({
   },
 });
 
+export const bevm = defineChain({
+  id: 1501,
+  name: "BEVM",
+  network: "BEVM",
+  nativeCurrency: {
+    decimals: 18,
+    name: "BTC",
+    symbol: "BTC",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc-1.bevm.io"],
+    },
+    public: {
+      http: ["https://rpc-2.bevm.io"],
+    },
+  },
+  blockExplorers: {
+    default: { name: "Explorer", url: "https://scan.bevm.io/" },
+  },
+});
+
 
 
 
@@ -84,7 +106,8 @@ export const inscriptionChains = {
   gnosis,
   shibarium,
   cfx,
-  cronos
+  cronos,
+  bevm
 };
 
 export type ChainKey = keyof typeof inscriptionChains;
