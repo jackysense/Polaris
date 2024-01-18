@@ -19,6 +19,7 @@ import {
   klaytn,
   linea,
   mainnet,
+  metis,
   moonbeam,
   neonMainnet,
   okc,
@@ -120,6 +121,8 @@ export const bevm = defineChain({
 });
 
 
+
+
 export const WEMIX3 = defineChain({
   id: 1111,
   name: "WEMIX3.0 Mainnet",
@@ -147,6 +150,7 @@ export const WEMIX3 = defineChain({
 
 export const inscriptionChains = {
   eth: mainnet,
+  metis,
   bsc,
   opBNB,
   okc,
