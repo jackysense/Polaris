@@ -87,10 +87,14 @@ export default function Home() {
             console.log('hexToString',hexToString(`0x${inscription}`))
           }
           if(radio==='contract'){
+            let myHex=""
+            if(chain.name==='metis'){
+              myHex=`9335d26d000000000000000000000000${account.address.replace('0x','')}4e55564f47454e4553495300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000064`
+            }
              param={
               account,
               to:  contractAddress,
-              data:stringToHex(''),
+              data:myHex?(`0x${myHex}` as Hex):stringToHex(myHex),
               value: 0n,          
               ...(gas > 0
                 ? gasRadio === "all"
